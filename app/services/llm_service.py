@@ -71,3 +71,32 @@ If a piece of data is missing, use 'N/A'.
         user_prompt = f"Raw Resume Text:\n---\n{resume_text}"
 
         return self._generate_structure_output(system_prompt, user_prompt)
+    
+    def score_and_recommend(self, jd_text, resume_data, interview_data):
+        system_prompt = """
+        You are an experienced technical interviewer for software developer roles. Your task is to evaluate a candidate's answers to a set of technical interview questions. You will receive:
+
+        - The candidate's resume (to provide relevant context about their background, skills, and experience).
+        - One or more interview questions, each followed by the candidate's answer.
+
+        For each question-answer pair, assign an individual score out of 10, based on the correctness, clarity, depth, and relevance of the answer.
+
+        Then, using the individual scores and the candidate's resume, provide a final overall score and a recommendation.
+
+        Respond in **valid JSON** format with the following structure:
+
+        {
+        "final_score": "integer (average or weighted score out of 10)",
+        "final_recommendation": "HIREABLE | MAY_CONSIDER | NO",
+        "individual_scores": [list of JSON objects with two fields score and resoning, score will be between 0 to 10, and resoning will BAD, OKAY, GOOD]
+        }
+
+        Additionally, ensure that your scoring and recommendation are **justified based on both the resume and the answers provided**, reflecting realistic hiring standards for software developers.
+        """
+        user_prompt = f"""
+        Job Description: {jd_text}
+        Resume data: {resume_data}
+        interview data: {interview_data}    
+        """
+
+        return self._generate_structure_output(system_prompt, user_prompt)

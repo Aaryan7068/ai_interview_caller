@@ -147,42 +147,43 @@ async def finish_interview(
     llm_service: LLMService = llm_service_dep,
     db: Session = Depends(get_db_session)
 ):
-    # result_record = db.query(InterviewResult).filter(InterviewResult.candidate_id == candidate_id).first()
+    result_record = db.query(InterviewResult).filter(InterviewResult.candidate_id == candidate_id).first()
     
-    # if not result_record:
-    #     return Response(status_code=200)
+    if not result_record:
+        return Response(status_code=200)
 
-    # jd = result_record.candidates.jd
-    # resume_summary = result_record.candidates.resume_summary
+    jd = result_record.candidates.jd
+    resume_summary = result_record.candidates.resume_summary
     
-    # try:
-    #     scoring_data = llm_service.score_and_recommend(
-    #         jd_text=jd.content, 
-    #         resume_data=resume_summary, 
-    #         interview_data=result_record.interview_data
-    #     )
+    try:
+        scoring_data = llm_service.score_and_recommend(
+            jd_text=jd.content, 
+            resume_data=resume_summary, 
+            interview_data=result_record.interview_data
+        )
+        scoring_data = json.loads(scoring_data)
 
-    #     result_record.final_score = scoring_data.get("final_score")
-    #     result_record.final_recommendation = scoring_data.get("final_recommendation")
+        result_record.final_score = scoring_data.get("final_score")
+        result_record.final_recommendation = scoring_data.get("final_recommendation")
         
-    #     individual_scores = scoring_data.get("individual_scores", [])
+        individual_scores = scoring_data.get("individual_scores", [])
         
-    #     # Update individual scores/reasoning
-    #     for qa_entry in result_record.interview_data:
-    #         match = next((s for s in individual_scores if s.get('question') == qa_entry['question']), None)
-    #         if match:
-    #             qa_entry['score'] = match.get('score')
-    #             qa_entry['reasoning'] = match.get('reasoning')
+        # Update individual scores/reasoning
+        for qa_entry in result_record.interview_data:
+            match = next((s for s in individual_scores if s.get('question') == qa_entry['question']), None)
+            if match:
+                qa_entry['score'] = match.get('score')
+                qa_entry['reasoning'] = match.get('reasoning')
 
-    #     result_record.interview_data = result_record.interview_data
+        result_record.interview_data = result_record.interview_data
         
-    #     db.add(result_record)
-    #     db.commit()
+        db.add(result_record)
+        db.commit()
 
-    #     print(f"Scoring complete for {candidate_id}. Final Score: {result_record.final_score}")
+        print(f"Scoring complete for {candidate_id}. Final Score: {result_record.final_score}")
 
-    # except Exception as e:
-    #     print(f"FATAL SCORING ERROR for {candidate_id}: {e}")
+    except Exception as e:
+        print(f"FATAL SCORING ERROR for {candidate_id}: {e}")
 
     response = VoiceResponse()
     response.hangup() 
