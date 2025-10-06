@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "5e173aaa-6f74-4163-a1c8-81de9ab3aac2",
+		"name": "My Collection",
+		"description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49055754",
+		"_collection_link": "https://aaryan7068-9194468.postman.co/workspace/Aaryan-Tiwari's-Workspace~c76091f0-9dac-4874-87df-8cbe002e64a0/collection/49055754-5e173aaa-6f74-4163-a1c8-81de9ab3aac2?action=share&source=collection_link&creator=49055754"
+	},
+	"item": [
+		{
+			"name": "Generate Questions",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"const id = jsonData.jd_id;",
+							"console.log(id)",
+							"pm.environment.set('jd_id', jsonData.jd_id || jsonData.id || jsonData.job_description_id);",
+							"pm.test('Status code is 200', function () { pm.response.to.have.status(201); });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "N4pe/zSQxDdJ/1o3lMUyw8hxfanmUWrylLJXXdo5ytc="
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"Sample Job Title\",\"content\":\"Join us as a Software Engineer This is an opportunity for a driven Software Engineer to take on an exciting new career challenge Day-to-day, you'll build a wide network of stakeholders of varying levels of seniority It’s a chance to hone your existing technical skills and advance your career We're offering this role at senior analyst level What you'll do In your new role, you’ll engineer and maintain innovative, customer centric, high performance, secure and robust solutions. You’ll be working within a feature team and using your extensive experience to engineer software, scripts and tools that are often complex, as well as liaising with other engineers, architects and business analysts across the platform. You’ll also be: Producing complex and critical software rapidly and of high quality which adds value to the business Working in permanent teams who are responsible for the full life cycle, from initial development, through enhancement and maintenance to replacement or decommissioning Collaborating to optimise our software engineering capability Designing, producing, testing and implementing our working code Working across the life cycle, from requirements analysis and design, through coding to testing, deployment and operations\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://ai-interview-caller-1.onrender.com/jd/generate-questions",
+					"protocol": "https",
+					"host": [
+						"ai-interview-caller-1",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"jd",
+						"generate-questions"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request POST 'https://ai-interview-caller-1.onrender.com/jd/generate-questions' \\\n--header 'X-API-KEY: N4pe/zSQxDdJ/1o3lMUyw8hxfanmUWrylLJXXdo5ytc=' \\\n--header 'Content-Type: application/json' \\\n--data-raw '{\"title\":\"Sample Job Title\",\"content\":\"Sample job description content here\"}'"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Candidate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.environment.set('id', jsonData.candidate_id || jsonData.id);",
+							"pm.test('Status code is 200', function () { pm.response.to.have.status(201); });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "N4pe/zSQxDdJ/1o3lMUyw8hxfanmUWrylLJXXdo5ytc="
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "{{name}}",
+							"type": "text"
+						},
+						{
+							"key": "e164_phone",
+							"value": "{{e164_phone}}",
+							"type": "text"
+						},
+						{
+							"key": "jd_id",
+							"value": "{{jd_id}}",
+							"type": "text"
+						},
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/aarya/Desktop/ai_interview_caller-main/ai_interview_caller-main/postman/Final_Resume_Aaryan.pdf"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://ai-interview-caller-1.onrender.com/candidate/create",
+					"protocol": "https",
+					"host": [
+						"ai-interview-caller-1",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"candidate",
+						"create"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request POST 'https://ai-interview-caller-1.onrender.com/candidate/create' \\\n--header 'X-API-KEY: N4pe/zSQxDdJ/1o3lMUyw8hxfanmUWrylLJXXdo5ytc=' \\\n--form 'name=John Doe' \\\n--form 'phone_number=1234567890' \\\n--form 'jd_id={{jd_id}}' \\\n--form 'resume=@path/to/sample_resume.pdf'"
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger Interview Call",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () { pm.response.to.have.status(202); });"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "N4pe/zSQxDdJ/1o3lMUyw8hxfanmUWrylLJXXdo5ytc="
+					}
+				],
+				"url": {
+					"raw": "https://ai-interview-caller-1.onrender.com/interview/trigger/{{id}}",
+					"protocol": "https",
+					"host": [
+						"ai-interview-caller-1",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"interview",
+						"trigger",
+						"{{id}}"
+					]
+				},
+				"description": "Generated from cURL: curl --location --request POST 'https://ai-interview-caller-1.onrender.com/interview/trigger/{{candidate_id}}' \\\n--header 'X-API-KEY: N4pe/zSQxDdJ/1o3lMUyw8hxfanmUWrylLJXXdo5ytc='"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
