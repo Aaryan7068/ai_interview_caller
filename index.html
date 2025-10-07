@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Caller - Design Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <div class="container mx-auto p-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900">AI Interview Caller</h1>
+            <p class="text-xl text-gray-600 mt-2">Design Document</p>
+        </header>
+
+        <main class="space-y-12">
+            <section class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-semibold mb-6 border-b-2 pb-4">Overall Architecture</h2>
+                <p class="text-lg leading-relaxed mb-6">The AI Interview Caller is a modern web application designed to streamline the initial candidate screening process. It features a decoupled architecture with a powerful backend and is ready for a dynamic frontend, ensuring scalability and maintainability.</p>
+                <ul class="list-disc list-inside space-y-4 text-lg">
+                    <li><strong>Backend:</strong> Built with <strong>FastAPI</strong>, a high-performance Python web framework, the backend manages all core business logic, from handling API requests to database interactions and third-party service integrations.</li>
+                    <li><strong>Database:</strong> A relational database, likely PostgreSQL, is used for data persistence. <strong>SQLAlchemy</strong> serves as the Object-Relational Mapper (ORM), providing an efficient and Pythonic way to interact with the database.</li>
+                    <li><strong>AI Integration:</strong> At its core, the application integrates with a Large Language Model (LLM) service, such as Google's Gemini, to power its intelligent features. This integration is central to the application's value proposition.</li>
+                    <li><strong>Telephony Service:</strong> The system leverages <strong>Twilio</strong> to conduct automated phone interviews, managing call initiation, recording, and transcription services, which are crucial for the interview process.</li>
+                </ul>
+            </section>
+
+            <section class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-semibold mb-6 border-b-2 pb-4">Data Design Summary</h2>
+                <p class="text-lg leading-relaxed mb-6">The data model is designed for simplicity and efficiency, revolving around three primary tables that manage the entire interview lifecycle:</p>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th class="py-3 px-6 text-left">Table</th>
+                                <th class="py-3 px-6 text-left">Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="py-3 px-6 font-semibold">JobDescription</td>
+                                <td class="py-3 px-6">Stores details about job openings, including titles, content, and AI-generated interview questions.</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3 px-6 font-semibold">Candidate</td>
+                                <td class="py-3 px-6">Contains information about each candidate, such as their name, phone number, and a parsed summary of their resume.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-6 font-semibold">InterviewResult</td>
+                                <td class="py-3 px-6">Logs the outcomes of each interview, including the call SID, transcribed responses, scores, and the final hiring recommendation.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-semibold mb-6 border-b-2 pb-4">AI Usage Points</h2>
+                <p class="text-lg leading-relaxed mb-6">The AI Interview Caller utilizes a Large Language Model (LLM) to automate and enhance key recruitment tasks, making the screening process faster and more effective:</p>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Question Generation</h3>
+                        <p>The LLM analyzes job descriptions to generate relevant and insightful interview questions, ensuring each interview is tailored to the specific role. </p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Resume Parsing</h3>
+                        <p>Upon application, the LLM parses candidate resumes to extract key information like skills and experience, creating a structured summary for easy review.</p>
+                    </div>
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold mb-2">Response Scoring</h3>
+                        <p>The LLM analyzes transcribed interview responses to score them for quality and relevance, providing a data-driven hiring recommendation.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="bg-white p-8 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-semibold mb-6 border-b-2 pb-4">System Flow</h2>
+                <div class="flex flex-col items-center space-y-4">
+                    <div class="w-full max-w-md bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md">
+                        <p class="font-bold">1. Job Description Creation</p>
+                    </div>
+                    <div class="text-gray-500 text-2xl">&darr;</div>
+                    <div class="w-full max-w-md bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-md">
+                        <p class="font-bold">2. AI Question Generation</p>
+                    </div>
+                    <div class="text-gray-500 text-2xl">&darr;</div>
+                    <div class="w-full max-w-md bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-md">
+                        <p class="font-bold">3. Candidate Application</p>
+                    </div>
+                    <div class="text-gray-500 text-2xl">&darr;</div>
+                    <div class="w-full max-w-md bg-purple-100 border-l-4 border-purple-500 text-purple-700 p-4 rounded-lg shadow-md">
+                        <p class="font-bold">4. AI Resume Parsing</p>
+                    </div>
+                    <div class="text-gray-500 text-2xl">&darr;</div>
+                    <div class="w-full max-w-md bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-md">
+                        <p class="font-bold">5. Automated Interview Call</p>
+                    </div>
+                    <div class="text-gray-500 text-2xl">&darr;</div>
+                     <div class="w-full max-w-md bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 p-4 rounded-lg shadow-md">
+                        <p class="font-bold">6. Response Recording & Transcription</p>
+                    </div>
+                    <div class="text-gray-500 text-2xl">&darr;</div>
+                    <div class="w-full max-w-md bg-pink-100 border-l-4 border-pink-500 text-pink-700 p-4 rounded-lg shadow-md">
+                        <p class="font-bold">7. AI Scoring and Recommendation</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
